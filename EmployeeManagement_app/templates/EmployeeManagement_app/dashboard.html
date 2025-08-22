@@ -1,0 +1,54 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Dashboard{% endblock title %}
+
+{% block content %}
+<main class="content flex-grow-1" style="padding-top: 80px;">
+    <div class="container-fluid">
+        <h2>Welcome back, {{ employee.user.first_name }}!</h2>
+        <p class="mb-4">Here's a quick overview of your HRMS activities.</p>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Attendance This Month</h5>
+                        <p class="display-5 text-primary">22 / 22</p>
+                        <p class="text-muted">Perfect attendance!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Leaves Remaining</h5>
+                        <p class="display-5 text-success">5</p>
+                        <p class="text-muted">Use wisely.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Last Payroll</h5>
+                        <p class="display-5 text-warning">$3500</p>
+                        <p class="text-muted">Paid on 2025-08-01</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Notifications Section -->
+        <section class="mt-5">
+            <h4>Recent Notifications</h4>
+            <ul class="list-group">
+                <li class="list-group-item">Your leave request for Aug 25 was approved.</li>
+                <li class="list-group-item">Payroll processed for August 2025.</li>
+                <li class="list-group-item">New company policies updated.</li>
+            </ul>
+        </section>
+    </div>
+</main>
+{% endblock content %}

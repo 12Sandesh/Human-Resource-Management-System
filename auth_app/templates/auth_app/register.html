@@ -1,0 +1,231 @@
+{% extends 'default/base.html' %}
+{% load static %}
+
+{% block title %}Register Employee{% endblock %}
+
+{% block content %}
+
+<!-- Animated background particles -->
+<div class="bg-particles">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+</div>
+
+<div class="auth-container">
+    <div class="auth-card register-card row g-0">
+
+        <!-- Left Image Section -->
+        <div class="col-md-5 image-section">
+            <div class="logo-container">
+                <div class="logo">
+                    <img src="{% static 'base/logo.png' %}" alt="HRMS Logo">
+                </div>
+                <div class="welcome-text-left">
+                    <h2 class="brand-text">Join Our Team</h2>
+                    <p class="brand-subtitle">Building careers, creating futures</p>
+                </div>
+                <div style="position: absolute; top: 20px; right: 20px; width: 60px; height: 60px; border: 2px solid rgba(255,255,255,0.1); border-radius: 50%; animation: spin 20s linear infinite;"></div>
+                <div style="position: absolute; bottom: 30px; left: 30px; width: 40px; height: 40px; background: rgba(255,255,255,0.1); border-radius: 8px; transform: rotate(45deg); animation: float 4s ease-in-out infinite;"></div>
+                <div style="position: absolute; top: 50%; left: 10px; width: 20px; height: 20px; background: rgba(255,255,255,0.05); border-radius: 50%; animation: float 6s ease-in-out infinite reverse;"></div>
+            </div>
+        </div>
+
+        <!-- Right Form Section -->
+        <div class="col-md-7 form-section d-flex flex-column justify-content-center">
+            <div class="welcome-text">
+                <h1 class="brand-text">Employee Registration</h1>
+                <p class="brand-subtitle">Create your HRMS account</p>
+            </div>
+
+            <!-- Show messages -->
+            {% if messages %}
+            <div class="mb-3">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- Registration Form -->
+            <form method="POST" action="" id="registerForm" class="register-form">
+                {% csrf_token %}
+
+                <!-- First & Last Name -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-person"></i></span>
+                            <input type="text" name="first_name" class="form-control" placeholder="First Name" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-person"></i></span>
+                            <input type="text" name="last_name" class="form-control" placeholder="Last Name" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Username & Password -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-at"></i></span>
+                            <input type="text" name="username" class="form-control" placeholder="Username" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                            <input type="password" name="password" class="form-control" placeholder="Password" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Confirm Password & Address -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-shield-lock"></i></span>
+                            <input type="password" name="confirm_password" class="form-control" placeholder="Confirm Password" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-house"></i></span>
+                            <input type="text" name="address" class="form-control" placeholder="Address" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Email & Phone -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                            <input type="email" name="email" class="form-control" placeholder="Email Address" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+                            <input type="text" name="phone_number" class="form-control" placeholder="Phone Number" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DOB & Gender -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-calendar-date"></i></span>
+                            <input type="date" name="date_of_birth" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-gender-ambiguous"></i></span>
+                            <select name="gender" class="form-control" required>
+                                <option value="">Select Gender</option>
+                                <option value="M">Male</option>
+                                <option value="F">Female</option>
+                                <option value="O">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Department & Job Role -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-building"></i></span>
+                            <select name="department" class="form-control" required>
+                                <option value="">Select Department</option>
+                                {% for dept in departments %}
+                                    <option value="{{ dept.id }}">{{ dept.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-briefcase"></i></span>
+                            <select name="job_role" class="form-control" required>
+                                <option value="">Select Job Role</option>
+                                {% for role in job_roles %}
+                                    <option value="{{ role.id }}">{{ role.title }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-auth btn-register w-100">
+                            <span class="btn-text">Register Employee</span>
+                            <span class="loading d-none"></span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Login Link Footer -->
+            <div class="card-footer text-center mt-5">
+                <small>Already have an account? <a href="{% url 'authapp-login' %}" style="color: #667eea; text-decoration: none;">Sign in here</a></small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const departmentSelect = document.querySelector('select[name="department"]');
+    const jobRoleSelect = document.querySelector('select[name="job_role"]');
+    
+    // Store all job roles for filtering
+    const allJobRoles = [
+        {% for role in job_roles %}
+        {
+            id: {{ role.id }},
+            title: "{{ role.title|escapejs }}",
+            department_id: {{ role.department.id }}
+        }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    ];
+    
+    departmentSelect.addEventListener('change', function() {
+        const selectedDepartmentId = parseInt(this.value);
+        
+        // Clear current job role options
+        jobRoleSelect.innerHTML = '<option value="">Select Job Role</option>';
+        
+        if (selectedDepartmentId) {
+            const filteredRoles = allJobRoles.filter(role => 
+                role.department_id === selectedDepartmentId
+            );
+            
+            filteredRoles.forEach(role => {
+                const option = document.createElement('option');
+                option.value = role.id;
+                option.textContent = role.title;
+                jobRoleSelect.appendChild(option);
+            });
+            
+            jobRoleSelect.disabled = false;
+        } else {
+            jobRoleSelect.disabled = true;
+        }
+    });
+    
+    // Initially disable job role select
+    jobRoleSelect.disabled = true;
+});
+</script>
+
+{% endblock content %}

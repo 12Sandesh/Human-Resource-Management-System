@@ -1,0 +1,220 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Leave Management{% endblock title %}
+
+{% block content %}
+<main class="content flex-grow-1" style="padding-top: 80px;">
+    <div class="container-fluid">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Leave Management</h2>
+            <div class="text-muted">
+                <i class="bi bi-person-badge"></i> {{ employee.employee_id }} - {{ employee.full_name }}
+            </div>
+        </div>
+
+        <!-- Display Messages -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- Apply for Leave Card -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card shadow-sm border-info">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-plus-circle"></i> Apply for Leave
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="leave_type" class="form-label">
+                                    <i class="bi bi-tag"></i> Leave Type
+                                </label>
+                                <select class="form-select" id="leave_type" name="leave_type" required>
+                                    <option value="">Select Leave Type</option>
+                                    <option value="Sick">Sick Leave</option>
+                                    <option value="Casual">Casual Leave</option>
+                                    <option value="Annual">Annual Leave</option>
+                                </select>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="start_date" class="form-label">
+                                        <i class="bi bi-calendar-event"></i> Start Date
+                                    </label>
+                                    <input type="date" class="form-control" id="start_date" name="start_date" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="end_date" class="form-label">
+                                        <i class="bi bi-calendar-event"></i> End Date
+                                    </label>
+                                    <input type="date" class="form-control" id="end_date" name="end_date" required>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="reason" class="form-label">
+                                    <i class="bi bi-chat-text"></i> Reason
+                                </label>
+                                <textarea class="form-control" id="reason" name="reason" rows="3" 
+                                          placeholder="Please provide a reason for your leave..." required></textarea>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-send"></i> Submit Leave Application
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Leave Balance -->
+            <div class="col-md-6">
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-calendar-check"></i> Leave Balance
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-4">
+                                <div class="border-end">
+                                    <h3 class="text-info">20</h3>
+                                    <small class="text-muted">Total Leaves</small>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="border-end">
+                                    <h3 class="text-warning">
+                                        {% with used_leaves=leave_records|length %}
+                                            {{ used_leaves }}
+                                        {% endwith %}
+                                    </h3>
+                                    <small class="text-muted">Used</small>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <h3 class="text-success">
+                                    {% with used_leaves=leave_records|length %}
+                                        {% widthratio 20 1 1 as total %}
+                                        {{ total|sub:used_leaves }}
+                                    {% endwith %}
+                                </h3>
+                                <small class="text-muted">Remaining</small>
+                            </div>
+                        </div>
+                        
+                        <hr>
+                        
+                        <div class="row text-center">
+                            <div class="col-4">
+                                <small class="text-muted">Sick: 5/10</small>
+                            </div>
+                            <div class="col-4">
+                                <small class="text-muted">Casual: 3/5</small>
+                            </div>
+                            <div class="col-4">
+                                <small class="text-muted">Annual: 2/5</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Leave History -->
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-clock-history"></i> Leave History
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if leave_records %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th><i class="bi bi-tag"></i> Type</th>
+                                    <th><i class="bi bi-calendar-range"></i> Duration</th>
+                                    <th><i class="bi bi-calendar3"></i> Days</th>
+                                    <th><i class="bi bi-chat-text"></i> Reason</th>
+                                    <th><i class="bi bi-check-circle"></i> Status</th>
+                                    <th><i class="bi bi-clock"></i> Applied</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for leave in leave_records %}
+                                    <tr>
+                                        <td>
+                                            <span class="badge bg-secondary">{{ leave.get_leave_type_display }}</span>
+                                        </td>
+                                        <td>
+                                            {{ leave.start_date|date:"M d" }} - {{ leave.end_date|date:"M d, Y" }}
+                                        </td>
+                                        <td>
+                                            {% with days_diff=leave.end_date|sub:leave.start_date %}
+                                                {{ days_diff|add:1 }} day{{ days_diff|add:1|pluralize }}
+                                            {% endwith %}
+                                        </td>
+                                        <td>
+                                            <span class="text-truncate" style="max-width: 200px;" title="{{ leave.reason }}">
+                                                {{ leave.reason|truncatechars:50 }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            {% if leave.status == 'Approved' %}
+                                                <span class="badge bg-success">
+                                                    <i class="bi bi-check-circle"></i> Approved
+                                                </span>
+                                            {% elif leave.status == 'Rejected' %}
+                                                <span class="badge bg-danger">
+                                                    <i class="bi bi-x-circle"></i> Rejected
+                                                </span>
+                                            {% else %}
+                                                <span class="badge bg-warning">
+                                                    <i class="bi bi-clock"></i> Pending
+                                                </span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-muted">
+                                            {{ leave.applied_at|date:"M d, Y" }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="bi bi-calendar-x" style="font-size: 3rem; color: #6c757d;"></i>
+                        <h4 class="text-muted mt-3">No Leave Records</h4>
+                        <p class="text-muted">You haven't applied for any leave yet.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    // Set minimum date to today for start date
+    document.getElementById('start_date').min = new Date().toISOString().split('T')[0];
+    
+    // Update end date minimum when start date changes
+    document.getElementById('start_date').addEventListener('change', function() {
+        document.getElementById('end_date').min = this.value;
+    });
+</script>
+{% endblock content %}

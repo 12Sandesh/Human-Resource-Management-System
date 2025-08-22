@@ -1,0 +1,140 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Attendance{% endblock title %}
+
+{% block content %}
+<main class="content flex-grow-1" style="padding-top: 80px;">
+    <div class="container-fluid">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Attendance Management</h2>
+            <div class="text-muted">
+                <i class="bi bi-person-badge"></i> {{ employee.employee_id }} - {{ employee.full_name }}
+            </div>
+        </div>
+
+        <!-- Mark Attendance Card -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card shadow-sm border-primary">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-clock"></i> Mark Today's Attendance
+                        </h5>
+                    </div>
+                    <div class="card-body text-center">
+                        {% if attendance_marked_today %}
+                            <div class="text-success mb-3">
+                                <i class="bi bi-check-circle-fill" style="font-size: 3rem;"></i>
+                                <h4>Already Marked!</h4>
+                                <p class="text-muted">You've already marked your attendance for today.</p>
+                            </div>
+                        {% else %}
+                            <div class="mb-3">
+                                <i class="bi bi-calendar-check" style="font-size: 3rem; color: #007bff;"></i>
+                                <h4>Mark Attendance</h4>
+                                <p class="text-muted">Click the button below to mark your attendance for today.</p>
+                            </div>
+                            <form method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-success btn-lg">
+                                    <i class="bi bi-check-circle"></i> Mark Present
+                                </button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Attendance Summary -->
+            <div class="col-md-6">
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-bar-chart"></i> This Month Summary
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-4">
+                                <div class="border-end">
+                                    <h3 class="text-success">{{ attendance_records|length }}</h3>
+                                    <small class="text-muted">Days Present</small>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="border-end">
+                                    <h3 class="text-warning">2</h3>
+                                    <small class="text-muted">Days Leave</small>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <h3 class="text-danger">1</h3>
+                                <small class="text-muted">Days Absent</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Attendance Records -->
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-calendar3"></i> Attendance Records - Current Month
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if attendance_records %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th><i class="bi bi-calendar-date"></i> Date</th>
+                                    <th><i class="bi bi-calendar-week"></i> Day</th>
+                                    <th><i class="bi bi-check-circle"></i> Status</th>
+                                    <th><i class="bi bi-clock-history"></i> Marked At</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for record in attendance_records %}
+                                    <tr>
+                                        <td>{{ record.date|date:"M d, Y" }}</td>
+                                        <td>{{ record.date|date:"l" }}</td>
+                                        <td>
+                                            {% if record.status == 'Present' %}
+                                                <span class="badge bg-success">
+                                                    <i class="bi bi-check-circle"></i> Present
+                                                </span>
+                                            {% elif record.status == 'Absent' %}
+                                                <span class="badge bg-danger">
+                                                    <i class="bi bi-x-circle"></i> Absent
+                                                </span>
+                                            {% else %}
+                                                <span class="badge bg-warning">
+                                                    <i class="bi bi-calendar-x"></i> Leave
+                                                </span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-muted">
+                                            <i class="bi bi-clock"></i> 
+                                            {{ record.date|date:"H:i A" }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="bi bi-calendar-x" style="font-size: 3rem; color: #6c757d;"></i>
+                        <h4 class="text-muted mt-3">No Attendance Records</h4>
+                        <p class="text-muted">No attendance records found for this month.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock content %}

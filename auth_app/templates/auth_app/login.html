@@ -1,0 +1,160 @@
+{% extends 'default/base.html' %}
+{% load static %}
+
+{% block title %}Sign In{% endblock %}
+
+{% block content %}
+
+    <!-- Animated background particles -->
+    <div class="bg-particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <div class="auth-container">
+        <div class="auth-card row g-0">
+            
+            <!-- Left Image Section -->
+            <div class="col-md-6 image-section">
+                <div class="logo-container">
+                    <div class="logo">
+                        <img src="{% static 'base/logo.png' %}" alt="HRMS Logo">
+                    </div>
+                    
+                    
+                    <!-- Decorative elements -->
+                    <div style="position: absolute; top: 20px; right: 20px; width: 60px; height: 60px; border: 2px solid rgba(255,255,255,0.1); border-radius: 50%; animation: spin 20s linear infinite;"></div>
+
+                    <div style="position: absolute; bottom: 30px; left: 30px; width: 40px; height: 40px; background: rgba(255,255,255,0.1); border-radius: 8px; transform: rotate(45deg); animation: float 4s ease-in-out infinite;"></div>
+                </div>
+            </div>
+
+            <!-- Right Form Section -->
+            <div class="col-md-6 form-section d-flex flex-column justify-content-center">
+                <div class="welcome-text">
+                    <h1 class="brand-text" id="portalTitle" style="cursor: pointer; transition: all 0.3s ease;" onclick="toggleAdminLogin()">HRMS Portal</h1>
+                    <p class="brand-subtitle" id="subtitle">Empowering teams, simplifying management</p>
+                </div>
+
+                <!-- Employee Sign In Form -->
+                <form method="POST" id="employeeLoginForm">
+                  {% csrf_token %}
+
+                  <!-- Username Field -->
+                  <div class="input-group mb-3">
+                      <span class="input-group-text"><i class="bi bi-person"></i></span>
+                      <input type="text" name="username" class="form-control" placeholder="Username" required>
+                  </div>
+
+                  <!-- Password Field -->
+                  <div class="input-group mb-3">
+                      <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                      <input type="password" name="password" class="form-control" placeholder="Password" required>
+                  </div>
+
+                  <!-- Submit Button -->
+                  <button type="submit" class="btn btn-auth btn-login w-100">
+                      <span class="btn-text">Sign In</span>
+                      <span class="loading d-none"></span>
+                  </button>
+                </form>
+
+                <!-- Admin Sign In Form (Hidden by default) -->
+                <form method="POST" id="adminLoginForm" style="display: none;">
+                  {% csrf_token %}
+
+                  <!-- Admin Username Field -->
+                  <div class="input-group mb-3">
+                      <span class="input-group-text"><i class="bi bi-shield-lock"></i></span>
+                      <input type="text" name="admin_username" class="form-control" placeholder="Admin Username" required>
+                  </div>
+
+                  <!-- Admin Password Field -->
+                  <div class="input-group mb-3">
+                      <span class="input-group-text"><i class="bi bi-key"></i></span>
+                      <input type="password" name="admin_password" class="form-control" placeholder="Admin Password" required>
+                  </div>
+
+                  <!-- Admin Submit Button -->
+                  <button type="submit" class="btn btn-auth btn-admin w-100">
+                      <span class="btn-text">Admin Sign In</span>
+                      <span class="loading d-none"></span>
+                  </button>
+                </form>
+
+                <!-- Rest of your existing footer content -->
+                <div class="card-footer text-center mt-4" id="registerFooter">
+                    <small>Don't have an account? <a href="{% url 'authapp-register' %}" style="color: #667eea; text-decoration: none;">Register here</a></small>
+                </div>
+
+                <div class="card-footer text-center mt-4" id="backToEmployeeFooter" style="display: none;">
+                    <small><a href="javascript:void(0)" onclick="toggleAdminLogin()" style="color: #667eea; text-decoration: none;">← Back to Employee Login</a></small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isAdminMode = false;
+
+        function toggleAdminLogin() {
+            const portalTitle = document.getElementById('portalTitle');
+            const subtitle = document.getElementById('subtitle');
+            const employeeForm = document.getElementById('employeeLoginForm');
+            const adminForm = document.getElementById('adminLoginForm');
+            const registerFooter = document.getElementById('registerFooter');
+            const backFooter = document.getElementById('backToEmployeeFooter');
+
+            if (!isAdminMode) {
+                // Switch to Admin Mode
+                portalTitle.innerHTML = '🔐 Admin Portal';
+                portalTitle.style.color = '#dc3545';
+                subtitle.innerHTML = 'Administrative access only';
+                
+                employeeForm.style.display = 'none';
+                adminForm.style.display = 'block';
+                registerFooter.style.display = 'none';
+                backFooter.style.display = 'block';
+                
+                // Add subtle red glow effect
+                portalTitle.style.textShadow = '0 0 10px rgba(220, 53, 69, 0.3)';
+                
+                isAdminMode = true;
+            } else {
+                // Switch back to Employee Mode
+                portalTitle.innerHTML = 'HRMS Portal';
+                portalTitle.style.color = '';
+                subtitle.innerHTML = 'Empowering teams, simplifying management';
+                
+                employeeForm.style.display = 'block';
+                adminForm.style.display = 'none';
+                registerFooter.style.display = 'block';
+                backFooter.style.display = 'none';
+                
+                // Remove glow effect
+                portalTitle.style.textShadow = '';
+                
+                isAdminMode = false;
+            }
+        }
+
+        // Add hover effect for the title
+        document.getElementById('portalTitle').addEventListener('mouseenter', function() {
+            if (!isAdminMode) {
+                this.style.transform = 'scale(1.05)';
+                this.style.textShadow = '0 0 15px rgba(102, 126, 234, 0.4)';
+            }
+        });
+
+        document.getElementById('portalTitle').addEventListener('mouseleave', function() {
+            if (!isAdminMode) {
+                this.style.transform = 'scale(1)';
+                this.style.textShadow = '';
+            }
+        });
+    </script>
+
+{% endblock %}

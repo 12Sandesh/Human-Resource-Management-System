@@ -1,0 +1,129 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Payroll{% endblock title %}
+
+{% block content %}
+<main class="content flex-grow-1" style="padding-top: 80px;">
+    <div class="container-fluid">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Payroll Information</h2>
+            <div class="text-muted">
+                <i class="bi bi-person-badge"></i> {{ employee.employee_id }} - {{ employee.full_name }}
+            </div>
+        </div>
+
+        <!-- Current Salary Info -->
+        {% if payroll_records %}
+            {% with latest_payroll=payroll_records.0 %}
+                <div class="row mb-4">
+                    <div class="col-md-8">
+                        <div class="card shadow-sm border-success">
+                            <div class="card-header bg-success text-white">
+                                <h5 class="card-title mb-0">
+                                    <i class="bi bi-cash-coin"></i> Latest Payroll - {{ latest_payroll.payment_date|date:"F Y" }}
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4 text-center">
+                                        <div class="border-end">
+                                            <h4 class="text-primary">${{ latest_payroll.basic_salary|floatformat:2 }}</h4>
+                                            <small class="text-muted">Basic Salary</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 text-center">
+                                        <div class="border-end">
+                                            <h4 class="text-info">+${{ latest_payroll.allowances|floatformat:2 }}</h4>
+                                            <small class="text-muted">Allowances</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 text-center">
+                                        <h4 class="text-danger">-${{ latest_payroll.deductions|floatformat:2 }}</h4>
+                                        <small class="text-muted">Deductions</small>
+                                    </div>
+                                </div>
+                                
+                                <hr>
+                                
+                                <div class="text-center">
+                                    <h3 class="text-success mb-0">${{ latest_payroll.net_salary|floatformat:2 }}</h3>
+                                    <p class="text-muted mb-0">Net Salary</p>
+                                    <small class="text-muted">
+                                        <i class="bi bi-calendar-event"></i> 
+                                        Paid on {{ latest_payroll.payment_date|date:"F d, Y" }}
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="card shadow-sm">
+                            <div class="card-header">
+                                <h6 class="card-title mb-0">
+                                    <i class="bi bi-download"></i> Download Options
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-outline-primary btn-sm">
+                                        <i class="bi bi-file-earmark-pdf"></i> Download Payslip
+                                    </button>
+                                    <button class="btn btn-outline-secondary btn-sm">
+                                        <i class="bi bi-file-earmark-text"></i> Tax Certificate
+                                    </button>
+                                    <button class="btn btn-outline-info btn-sm">
+                                        <i class="bi bi-graph-up"></i> Salary Statement
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endwith %}
+        {% endif %}
+
+        <!-- Payroll History -->
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-clock-history"></i> Payroll History
+                    </h5>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-outline-secondary btn-sm active">All</button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm">2025</button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm">2024</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if payroll_records %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th><i class="bi bi-calendar-month"></i> Month</th>
+                                    <th><i class="bi bi-cash"></i> Basic Salary</th>
+                                    <th><i class="bi bi-plus-circle"></i> Allowances</th>
+                                    <th><i class="bi bi-dash-circle"></i> Deductions</th>
+                                    <th><i class="bi bi-cash-coin"></i> Net Salary</th>
+                                    <th><i class="bi bi-calendar-check"></i> Paid Date</th>
+                                    <th><i class="bi bi-gear"></i> Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for payroll in payroll_records %}
+                                    <tr>
+                                        <td>
+                                            <strong>{{ payroll.payment_date|date:"F Y" }}</strong>
+                                        </td>
+                                        <td class="text-primary">
+                                            ${{ payroll.basic_salary|floatformat:2 }}
+                                        </td>
+                                        <td class="text-info">
+                                            +${{ payroll.allowances|floatformat:2 }}
+                                        </td>
+                                        <td class="text-danger">
+                                            -${{ payroll.deductions|floatformat:2 }}
