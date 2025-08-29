@@ -5,50 +5,232 @@
 {% block content %}
 <main class="content flex-grow-1" style="padding-top: 80px;">
     <div class="container-fluid">
-        <h2>Welcome back, {{ employee.user.first_name }}!</h2>
-        <p class="mb-4">Here's a quick overview of your HRMS activities.</p>
-
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">Attendance This Month</h5>
-                        <p class="display-5 text-primary">22 / 22</p>
-                        <p class="text-muted">Perfect attendance!</p>
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h2 class="mb-1">Welcome back, {{ employee.user.first_name }}!</h2>
+                        <p class="employee-info mb-0">
+                            <i class="bi bi-person-badge"></i> {{ employee.employee_id }} | {{ employee.department.name }} - {{ employee.job_role.title }}
+                        </p>
                     </div>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">Leaves Remaining</h5>
-                        <p class="display-5 text-success">5</p>
-                        <p class="text-muted">Use wisely.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">Last Payroll</h5>
-                        <p class="display-5 text-warning">$3500</p>
-                        <p class="text-muted">Paid on 2025-08-01</p>
+                    <div class="col-md-4 text-md-end">
+                        <div class="d-flex align-items-center justify-content-md-end">
+                            <i class="bi bi-calendar-event me-2"></i>
+                            <span id="current-date"></span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Recent Notifications Section -->
-        <section class="mt-5">
-            <h4>Recent Notifications</h4>
-            <ul class="list-group">
-                <li class="list-group-item">Your leave request for Aug 25 was approved.</li>
-                <li class="list-group-item">Payroll processed for August 2025.</li>
-                <li class="list-group-item">New company policies updated.</li>
-            </ul>
-        </section>
+        <!-- Quick Stats -->
+        <div class="row g-4 mb-5 fade-in-up">
+            <div class="col-lg-4 col-md-6">
+                <div class="stats-card attendance">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <h3>22</h3>
+                            <p>Days Present</p>
+                            <small class="opacity-75">Perfect attendance this month!</small>
+                        </div>
+                        <div class="stats-icon">
+                            <i class="bi bi-calendar-check" style="font-size: 2rem;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6">
+                <div class="stats-card leaves">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <h3>5</h3>
+                            <p>Leaves Available</p>
+                            <small class="opacity-75">Use them wisely</small>
+                        </div>
+                        <div class="stats-icon">
+                            <i class="bi bi-calendar-x" style="font-size: 2rem;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6">
+                <div class="stats-card payroll">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <h3>$3,500</h3>
+                            <p>Last Payroll</p>
+                            <small class="opacity-75">Paid on Aug 1, 2025</small>
+                        </div>
+                        <div class="stats-icon">
+                            <i class="bi bi-cash-coin" style="font-size: 2rem;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions & Recent Activity -->
+        <div class="row g-4 mb-5">
+            <!-- Quick Actions -->
+            <div class="col-lg-6">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-lightning-charge"></i> Quick Actions
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <a href="{% url 'employee-attendance' employee_id=employee.employee_id %}" 
+                                   class="btn btn-success w-100 btn-lg text-decoration-none">
+                                    <i class="bi bi-clock-fill"></i>
+                                    <br>Mark Attendance
+                                </a>
+                            </div>
+                            <div class="col-6">
+                                <a href="{% url 'employee-leave' employee_id=employee.employee_id %}" 
+                                   class="btn btn-primary w-100 btn-lg text-decoration-none">
+                                    <i class="bi bi-calendar-plus"></i>
+                                    <br>Apply Leave
+                                </a>
+                            </div>
+                            <div class="col-6">
+                                <a href="{% url 'employee-payroll' employee_id=employee.employee_id %}" 
+                                   class="btn btn-info w-100 btn-lg text-decoration-none text-white">
+                                    <i class="bi bi-file-earmark-text"></i>
+                                    <br>View Payslip
+                                </a>
+                            </div>
+                            <div class="col-6">
+                                <button class="btn btn-warning w-100 btn-lg">
+                                    <i class="bi bi-person-gear"></i>
+                                    <br>Update Profile
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Notifications -->
+            <div class="col-lg-6">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-bell"></i> Recent Notifications
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="notification-list">
+                            <div class="notification-item d-flex align-items-start mb-3 p-3 bg-light rounded-3">
+                                <div class="notification-icon me-3">
+                                    <i class="bi bi-check-circle-fill text-success"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1">Leave Request Approved</h6>
+                                    <p class="mb-1 text-muted">Your leave request for Aug 25 was approved.</p>
+                                    <small class="text-muted">2 hours ago</small>
+                                </div>
+                            </div>
+                            
+                            <div class="notification-item d-flex align-items-start mb-3 p-3 bg-light rounded-3">
+                                <div class="notification-icon me-3">
+                                    <i class="bi bi-cash-coin text-info"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1">Payroll Processed</h6>
+                                    <p class="mb-1 text-muted">Your salary for August 2025 has been processed.</p>
+                                    <small class="text-muted">1 day ago</small>
+                                </div>
+                            </div>
+                            
+                            <div class="notification-item d-flex align-items-start mb-3 p-3 bg-light rounded-3">
+                                <div class="notification-icon me-3">
+                                    <i class="bi bi-info-circle-fill text-primary"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1">Policy Update</h6>
+                                    <p class="mb-1 text-muted">New company policies have been updated.</p>
+                                    <small class="text-muted">3 days ago</small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center mt-3">
+                            <button class="btn btn-outline-primary btn-sm">
+                                <i class="bi bi-arrow-right"></i> View All Notifications
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Performance Overview -->
+        <div class="row g-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-graph-up"></i> Monthly Performance Overview
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-md-3">
+                                <div class="metric-box">
+                                    <div class="metric-number">100%</div>
+                                    <div class="metric-label">Attendance Rate</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="metric-box">
+                                    <div class="metric-number">3</div>
+                                    <div class="metric-label">Tasks Completed</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="metric-box">
+                                    <div class="metric-number">98%</div>
+                                    <div class="metric-label">Performance Score</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="metric-box">
+                                    <div class="metric-number">15</div>
+                                    <div class="metric-label">Leaves Remaining</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </main>
+
+<script>
+// Display current date
+document.getElementById('current-date').textContent = new Date().toLocaleDateString('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+});
+
+// Add fade-in animation to cards
+document.addEventListener('DOMContentLoaded', function() {
+    const cards = document.querySelectorAll('.card');
+    cards.forEach((card, index) => {
+        setTimeout(() => {
+            card.classList.add('fade-in-up');
+        }, index * 100);
+    });
+});
+</script> 
 {% endblock content %}

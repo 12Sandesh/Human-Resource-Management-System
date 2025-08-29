@@ -36,7 +36,7 @@ class Employee(models.Model):
     gender_choices = [('M', 'Male'), ('F', 'Female'), ('O', 'Other')]
     gender = models.CharField(max_length=1, choices=gender_choices)
     phone_number = models.CharField(max_length=15)
-    address = models.TextField()  # Changed from CharField with max_length=50
+    address = models.CharField(max_length=50)  
 
     # Work Information
     department = models.ForeignKey(
