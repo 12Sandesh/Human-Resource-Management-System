@@ -7,8 +7,9 @@ urlpatterns = [
     path('<str:employee_id>/attendance/export/', views.export_attendance_report, name='export-attendance'),
     path('<str:employee_id>/attendance/', views.attendance, name='employee-attendance'),
 
+    path('<str:employee_id>/leave/export/', views.export_leave_report, name='export-leave'),
     path('<str:employee_id>/leave/', views.leave, name='employee-leave'),
 
+    path('<str:employee_id>/payroll/export/', views.export_payroll_report, name='export-payroll'),
     path('<str:employee_id>/payroll/', views.payroll, name='employee-payroll'),
 ]
-

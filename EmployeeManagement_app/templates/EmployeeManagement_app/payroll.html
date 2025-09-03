@@ -4,6 +4,7 @@
 {% block title %}Payroll{% endblock title %}
 
 {% block content %}
+
 <main class="content flex-grow-1" style="padding-top: 80px;">
     <div class="container-fluid">
         <!-- Page Header -->
@@ -31,75 +32,154 @@
         </div>
 
         <!-- Current Salary Overview -->
-        {% if payroll_records %}
-            {% with latest_payroll=payroll_records.0 %}
-                <div class="row g-4 mb-5">
-                    <!-- Latest Payroll Card -->
-                    <div class="col-lg-8">
-                        <div class="card border-success h-100">
-                            <div class="card-header bg-success">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <h5 class="card-title mb-0">
-                                        <i class="bi bi-cash-stack"></i> Latest Payroll - {{ latest_payroll.payment_date|date:"F Y" }}
-                                    </h5>
-                                    <span class="badge bg-light text-dark px-3 py-1">
-                                        <i class="bi bi-check-circle"></i> Processed
-                                    </span>
+{% if payroll_records %}
+{% with latest_payroll=payroll_records.0 %}
+<section class="salary-overview mb-5">
+    <div class="card border-success shadow-sm rounded-3">
+        <div class="card-header bg-success text-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-cash-stack"></i> Latest Payroll - {{ latest_payroll.payment_date|date:"F Y" }}
+                </h5>
+                <span class="badge bg-light text-dark px-3 py-1">
+                    <i class="bi bi-check-circle"></i> Processed
+                </span>
+            </div>
+        </div>
+
+<!-- Current Salary Overview -->
+        <div class="card-body p-0">
+            <!-- Salary Breakdown -->
+            <div class="row g-0">
+                <div class="col-md-4 p-4 border-end">
+                    <div class="text-center">
+                        <div class="metric-box">
+                            <div class="metric-number text-primary">
+                                ${{ latest_payroll.basic_salary|floatformat:2 }}
+                            </div>
+                            <div class="metric-label">Basic Salary</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 p-4 border-end">
+                    <div class="text-center">
+                        <div class="metric-box">
+                            <div class="metric-number text-info">
+                                +${{ latest_payroll.allowances|floatformat:2 }}
+                            </div>
+                            <div class="metric-label">Allowances</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 p-4">
+                    <div class="text-center">
+                        <div class="metric-box">
+                            <div class="metric-number text-danger">
+                                -${{ latest_payroll.deductions|floatformat:2 }}
+                            </div>
+                            <div class="metric-label">Deductions</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Net Salary & Payment Info (inside same container) -->
+            <div class="bg-light p-4 border-top">
+                <div class="row align-items-center">
+                    <!-- Net Salary -->
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center">
+                            <div class="me-3">
+                                <div class="net-salary-icon">
+                                    <i class="bi bi-wallet2"></i>
                                 </div>
                             </div>
-                            <div class="card-body p-0">
-                                <!-- Salary Breakdown -->
-                                <div class="row g-0">
-                                    <div class="col-md-4 p-4 border-end">
-                                        <div class="text-center">
-                                            <div class="metric-box">
-                                                <div class="metric-number text-primary">${{ latest_payroll.basic_salary|floatformat:2 }}</div>
-                                                <div class="metric-label">Basic Salary</div>
-                                            </div>
+                            <div>
+                                <h3 class="text-success mb-0">
+                                    ${{ latest_payroll.net_salary|floatformat:2 }}
+                                </h3>
+                                <p class="text-muted mb-0">Total Net Salary</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Info -->
+                    <div class="col-md-6 text-md-end">
+                        <div class="payment-info">
+                            <p class="mb-1">
+                                <i class="bi bi-calendar-check text-success"></i>
+                                <strong>Paid on:</strong> {{ latest_payroll.payment_date|date:"F d, Y" }}
+                            </p>
+                            <p class="mb-0 text-muted">
+                                <i class="bi bi-bank"></i> Direct Deposit
+                            </p>
+                            <p class="mb-0 text-muted mt-2">
+                                <i class="bi bi-info-circle"></i> Next payment:
+                                <strong>Oct 1, 2025</strong>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- card-body -->
+    </div> <!-- card -->
+
+
+
+
+
+
+                <!-- Equal Height Row: Yearly Summary & Tax Information -->
+                <div class="row mb-5 equal-height-row">
+                    <!-- Annual Earnings Summary -->
+                    <div class="col-lg-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">
+                                    <i class="bi bi-graph-up"></i> Annual Earnings Summary - 2025
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row h-100">
+                                    <div class="col-md-6">
+                                        <div class="earnings-chart-container">
+                                            <canvas id="earningsChart" width="400" height="250"></canvas>
                                         </div>
                                     </div>
-                                    <div class="col-md-4 p-4 border-end">
-                                        <div class="text-center">
-                                            <div class="metric-box">
-                                                <div class="metric-number text-info">+${{ latest_payroll.allowances|floatformat:2 }}</div>
-                                                <div class="metric-label">Allowances</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 p-4">
-                                        <div class="text-center">
-                                            <div class="metric-box">
-                                                <div class="metric-number text-danger">-${{ latest_payroll.deductions|floatformat:2 }}</div>
-                                                <div class="metric-label">Deductions</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="bg-light p-4">
-                                    <div class="row align-items-center">
-                                        <div class="col-md-6">
-                                            <div class="d-flex align-items-center">
-                                                <div class="me-3">
-                                                    <div class="net-salary-icon">
-                                                        <i class="bi bi-wallet2"></i>
+                                    <div class="col-md-6">
+                                        <div class="annual-stats">
+                                            <div class="stat-item">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        <h6 class="mb-1">Total Earnings (YTD)</h6>
+                                                        <small class="text-muted">Jan - {{ latest_payroll.payment_date|date:"M" }} 2025</small>
+                                                    </div>
+                                                    <div class="text-end">
+                                                        <h4 class="text-success mb-0">${{ payroll_summary.total_ytd_earnings|floatformat:2 }}</h4>
                                                     </div>
                                                 </div>
-                                                <div>
-                                                    <h3 class="text-success mb-0">${{ latest_payroll.net_salary|floatformat:2 }}</h3>
-                                                    <p class="text-muted mb-0">Net Salary</p>
+                                            </div>
+                                            <div class="stat-item">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        <h6 class="mb-1">Average Monthly</h6>
+                                                        <small class="text-muted">Based on payments received</small>
+                                                    </div>
+                                                    <div class="text-end">
+                                                        <h5 class="text-primary mb-0">${{ payroll_summary.average_monthly_salary|floatformat:2 }}</h5>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="col-md-6 text-md-end">
-                                            <div class="payment-info">
-                                                <p class="mb-1">
-                                                    <i class="bi bi-calendar-check text-success"></i> 
-                                                    <strong>Paid on:</strong> {{ latest_payroll.payment_date|date:"F d, Y" }}
-                                                </p>
-                                                <p class="mb-0 text-muted">
-                                                    <i class="bi bi-bank"></i> Direct Deposit
-                                                </p>
+                                            <div class="stat-item">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        <h6 class="mb-1">Projected Annual</h6>
+                                                        <small class="text-muted">12 months estimate</small>
+                                                    </div>
+                                                    <div class="text-end">
+                                                        <h5 class="text-info mb-0">${{ payroll_summary.projected_annual_salary|floatformat:2 }}</h5>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -108,106 +188,62 @@
                         </div>
                     </div>
                     
-                    <!-- Quick Actions -->
+                    <!-- Tax & Benefits Information - Now with compact styling -->
                     <div class="col-lg-4">
-                        <div class="card h-100">
+                        <div class="card tax-benefits-card">
                             <div class="card-header">
                                 <h6 class="card-title mb-0">
-                                    <i class="bi bi-download"></i> Quick Actions
+                                    <i class="bi bi-shield-check"></i> Tax & Benefits Info
                                 </h6>
                             </div>
                             <div class="card-body">
-                                <div class="d-grid gap-3">
-                                    <button class="btn btn-primary">
-                                        <i class="bi bi-file-earmark-pdf me-2"></i> Download Payslip
-                                    </button>
-                                    <button class="btn btn-outline-secondary">
-                                        <i class="bi bi-file-earmark-text me-2"></i> Tax Certificate
-                                    </button>
-                                    <button class="btn btn-outline-info">
-                                        <i class="bi bi-graph-up me-2"></i> Salary Statement
-                                    </button>
-                                    <button class="btn btn-outline-warning">
-                                        <i class="bi bi-calculator me-2"></i> Tax Calculator
-                                    </button>
+                                <!-- Tax Information -->
+                                <div class="info-section">
+                                    <h6 class="section-title">
+                                        <i class="bi bi-file-earmark-text text-warning"></i> Tax Information
+                                    </h6>
+                                    <div class="info-list">
+                                        <div class="d-flex justify-content-between">
+                                            <span>Tax Deducted (YTD)</span>
+                                            <strong class="text-danger">${{ payroll_summary.total_tax_deducted|floatformat:2 }}</strong>
+                                        </div>
+                                        <div class="d-flex justify-content-between">
+                                            <span>Tax Rate</span>
+                                            <span class="text-muted">15%</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between">
+                                            <span>Tax Bracket</span>
+                                            <span class="badge bg-info">Standard</span>
+                                        </div>
+                                    </div>
                                 </div>
                                 
-                                <div class="mt-4 p-3 bg-light rounded">
-                                    <h6 class="mb-2">
-                                        <i class="bi bi-info-circle text-info"></i> Pay Schedule
+                                <!-- Benefits Information -->
+                                <div class="info-section">
+                                    <h6 class="section-title">
+                                        <i class="bi bi-heart text-success"></i> Benefits Package
                                     </h6>
-                                    <small class="text-muted">
-                                        Next payment: <strong>Sep 1, 2025</strong><br>
-                                        Payment frequency: <strong>Monthly</strong>
-                                    </small>
+                                    <div class="benefits-list">
+                                        <div class="benefit-item">
+                                            <i class="bi bi-check-circle text-success me-2"></i>
+                                            <span>Health Insurance</span>
+                                        </div>
+                                        <div class="benefit-item">
+                                            <i class="bi bi-check-circle text-success me-2"></i>
+                                            <span>Retirement Plan (401k)</span>
+                                        </div>
+                                        <div class="benefit-item">
+                                            <i class="bi bi-check-circle text-success me-2"></i>
+                                            <span>Paid Time Off</span>
+                                        </div>
+                                        <div class="benefit-item">
+                                            <i class="bi bi-check-circle text-success me-2"></i>
+                                            <span>Life Insurance</span>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Salary Breakdown Chart -->
-                <div class="row mb-5">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0">
-                                    <i class="bi bi-pie-chart"></i> Salary Breakdown - {{ latest_payroll.payment_date|date:"F Y" }}
-                                </h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        <div class="salary-breakdown-chart">
-                                            <canvas id="salaryChart" width="400" height="200"></canvas>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="breakdown-legend">
-                                            <div class="legend-item d-flex align-items-center mb-3">
-                                                <div class="legend-color bg-primary me-3"></div>
-                                                <div class="flex-grow-1">
-                                                    <div class="d-flex justify-content-between">
-                                                        <span>Basic Salary</span>
-                                                        <strong>${{ latest_payroll.basic_salary|floatformat:2 }}</strong>
-                                                    </div>
-                                                    <small class="text-muted">Core compensation</small>
-                                                </div>
-                                            </div>
-                                            <div class="legend-item d-flex align-items-center mb-3">
-                                                <div class="legend-color bg-info me-3"></div>
-                                                <div class="flex-grow-1">
-                                                    <div class="d-flex justify-content-between">
-                                                        <span>Allowances</span>
-                                                        <strong>+${{ latest_payroll.allowances|floatformat:2 }}</strong>
-                                                    </div>
-                                                    <small class="text-muted">HRA, Transport, etc.</small>
-                                                </div>
-                                            </div>
-                                            <div class="legend-item d-flex align-items-center mb-3">
-                                                <div class="legend-color bg-danger me-3"></div>
-                                                <div class="flex-grow-1">
-                                                    <div class="d-flex justify-content-between">
-                                                        <span>Deductions</span>
-                                                        <strong>-${{ latest_payroll.deductions|floatformat:2 }}</strong>
-                                                    </div>
-                                                    <small class="text-muted">Tax, PF, Insurance</small>
-                                                </div>
-                                            </div>
-                                            <hr>
-                                            <div class="legend-item d-flex align-items-center">
-                                                <div class="legend-color bg-success me-3"></div>
-                                                <div class="flex-grow-1">
-                                                    <div class="d-flex justify-content-between">
-                                                        <span><strong>Net Salary</strong></span>
-                                                        <strong class="text-success">${{ latest_payroll.net_salary|floatformat:2 }}</strong>
-                                                    </div>
-                                                    <small class="text-muted">Amount credited</small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                
                             </div>
                         </div>
                     </div>
@@ -222,15 +258,10 @@
                     <h5 class="card-title mb-0">
                         <i class="bi bi-clock-history"></i> Payroll History
                     </h5>
-                    <div class="d-flex gap-2">
-                        <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-outline-primary btn-sm active">All</button>
-                            <button type="button" class="btn btn-outline-primary btn-sm">2025</button>
-                            <button type="button" class="btn btn-outline-primary btn-sm">2024</button>
-                        </div>
-                        <button class="btn btn-outline-success btn-sm">
-                            <i class="bi bi-download"></i> Export
-                        </button>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-outline-primary btn-sm active">All</button>
+                        <button type="button" class="btn btn-outline-primary btn-sm">2025</button>
+                        <button type="button" class="btn btn-outline-primary btn-sm">2024</button>
                     </div>
                 </div>
             </div>
@@ -246,7 +277,6 @@
                                     <th><i class="bi bi-dash-circle"></i> Deductions</th>
                                     <th><i class="bi bi-cash-coin"></i> Net Salary</th>
                                     <th><i class="bi bi-calendar-check"></i> Paid Date</th>
-                                    <th><i class="bi bi-gear"></i> Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -286,43 +316,17 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <td>
-                                            <div class="btn-group" role="group">
-                                                <button class="btn btn-outline-primary btn-sm" data-bs-toggle="tooltip" title="View Details">
-                                                    <i class="bi bi-eye"></i>
-                                                </button>
-                                                <button class="btn btn-outline-success btn-sm" data-bs-toggle="tooltip" title="Download Payslip">
-                                                    <i class="bi bi-download"></i>
-                                                </button>
-                                                <button class="btn btn-outline-info btn-sm" data-bs-toggle="tooltip" title="Print">
-                                                    <i class="bi bi-printer"></i>
-                                                </button>
-                                            </div>
-                                        </td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
                     </div>
                     
-                    <!-- Pagination -->
-                    <div class="d-flex justify-content-between align-items-center mt-4">
-                        <div>
-                            <small class="text-muted">Showing {{ payroll_records|length }} of {{ payroll_records|length }} records</small>
-                        </div>
-                        <nav aria-label="Payroll pagination">
-                            <ul class="pagination pagination-sm">
-                                <li class="page-item disabled">
-                                    <a class="page-link" href="#" tabindex="-1">Previous</a>
-                                </li>
-                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#">Next</a>
-                                </li>
-                            </ul>
-                        </nav>
+                    <!-- Export Button -->
+                    <div class="text-center mt-4">
+                        <button class="btn btn-outline-success" id="export-payroll-btn-main" onclick="exportPayrollReport()">
+                            <i class="bi bi-download me-2"></i> Export Payroll Report
+                        </button>
                     </div>
                 {% else %}
                     <div class="empty-state">
@@ -340,42 +344,113 @@
 </main>
 
 <script>
-// Initialize Chart.js for salary breakdown
+// Function to export payroll report
+function exportPayrollReport() {
+  const employeeId = '{{ employee.employee_id }}';
+  const exportBtns = document.querySelectorAll('[id^="export-payroll-btn"]');
+  
+  // Show loading state on all export buttons
+  exportBtns.forEach(btn => {
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="bi bi-clock-history"></i> Generating...';
+    btn.disabled = true;
+    
+    // Store original text for later restoration
+    btn.setAttribute('data-original-text', originalText);
+  });
+  
+  // Build export URL
+  const exportUrl = `{% url 'export-payroll' employee.employee_id %}`;
+  
+  // Create a temporary link element and trigger download
+  const link = document.createElement('a');
+  link.href = exportUrl;
+  link.download = ''; // Let the server determine filename
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  
+  // Reset button states after a short delay
+  setTimeout(() => {
+    exportBtns.forEach(btn => {
+      const originalText = btn.getAttribute('data-original-text');
+      btn.innerHTML = originalText;
+      btn.disabled = false;
+      btn.removeAttribute('data-original-text');
+    });
+  }, 2000);
+}
+
+// Initialize Chart.js for earnings trend
 document.addEventListener('DOMContentLoaded', function() {
-    const ctx = document.getElementById('salaryChart');
+    const ctx = document.getElementById('earningsChart');
     if (ctx) {
         {% if payroll_records %}
-            {% with latest_payroll=payroll_records.0 %}
-                new Chart(ctx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Basic Salary', 'Allowances', 'Deductions'],
-                        datasets: [{
-                            data: [{{ latest_payroll.basic_salary }}, {{ latest_payroll.allowances }}, {{ latest_payroll.deductions }}],
-                            backgroundColor: [
-                                'rgba(13, 110, 253, 0.8)',
-                                'rgba(13, 202, 240, 0.8)',
-                                'rgba(220, 53, 69, 0.8)'
-                            ],
-                            borderColor: [
-                                'rgba(13, 110, 253, 1)',
-                                'rgba(13, 202, 240, 1)',
-                                'rgba(220, 53, 69, 1)'
-                            ],
-                            borderWidth: 2
-                        }]
+            // Prepare data for earnings trend (last 6 months or available records)
+            const payrollData = [
+                {% for payroll in payroll_records|slice:":6" reversed %}
+                {
+                    month: '{{ payroll.payment_date|date:"M Y" }}',
+                    basic: {{ payroll.basic_salary }},
+                    allowances: {{ payroll.allowances }},
+                    deductions: {{ payroll.deductions }},
+                    net: {{ payroll.net_salary }}
+                },
+                {% endfor %}
+            ];
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: payrollData.map(data => data.month),
+                    datasets: [
+                        {
+                            label: 'Net Salary',
+                            data: payrollData.map(data => data.net),
+                            borderColor: 'rgba(40, 167, 69, 1)',
+                            backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Basic Salary',
+                            data: payrollData.map(data => data.basic),
+                            borderColor: 'rgba(13, 110, 253, 1)',
+                            backgroundColor: 'rgba(13, 110, 253, 0.1)',
+                            borderWidth: 2,
+                            fill: false,
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value.toLocaleString();
+                                }
+                            }
+                        }
                     },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                display: false
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': $' + context.parsed.y.toLocaleString();
+                                }
                             }
                         }
                     }
-                });
-            {% endwith %}
+                }
+            });
         {% endif %}
     }
 });
@@ -416,118 +491,4 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<style>
-.net-salary-icon {
-    width: 50px;
-    height: 50px;
-    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 1.5rem;
-}
-
-.period-icon {
-    width: 35px;
-    height: 35px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 0.9rem;
-}
-
-.legend-color {
-    width: 20px;
-    height: 20px;
-    border-radius: 4px;
-}
-
-.legend-item {
-    padding: 0.5rem 0;
-}
-
-.net-salary-cell {
-    background: linear-gradient(135deg, rgba(40, 167, 69, 0.1) 0%, rgba(32, 201, 151, 0.1) 100%);
-    padding: 0.5rem;
-    border-radius: 8px;
-    text-align: center;
-}
-
-.salary-breakdown-chart {
-    height: 300px;
-    position: relative;
-}
-
-.payment-info {
-    text-align: right;
-}
-
-tbody tr {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: all 0.3s ease;
-}
-
-.btn-group .btn {
-    border-radius: 0.375rem !important;
-    margin-right: 0.25rem;
-}
-
-.btn-group .btn:last-child {
-    margin-right: 0;
-}
-
-.table td {
-    vertical-align: middle;
-}
-
-.pagination .page-link {
-    border-radius: 50px;
-    margin: 0 2px;
-    border: none;
-    color: #667eea;
-}
-
-.pagination .page-item.active .page-link {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-color: transparent;
-}
-
-@media (max-width: 768px) {
-    .salary-breakdown-chart {
-        height: 250px;
-    }
-    
-    .legend-item {
-        font-size: 0.9rem;
-    }
-    
-    .net-salary-cell {
-        font-size: 0.9rem;
-    }
-}
-
-/* Loading animation for chart */
-.chart-loading {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 300px;
-    color: #6c757d;
-}
-
-/* Hover effects */
-.table tbody tr:hover {
-    background-color: rgba(102, 126, 234, 0.05);
-}
-
-.btn:hover {
-    transform: translateY(-1px);
-}
-</style>
 {% endblock content %}

@@ -607,3 +607,247 @@ tbody tr {
     transform: translateY(0);
   }
 }
+
+
+
+
+
+
+
+
+/* PAYROLL PAGE ENHANCEMENTS - Replace the existing payroll section in base.css */
+
+/* Tax & Benefits Card - Enhanced spacing */
+.tax-benefits-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.tax-benefits-card .card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2rem 1.5rem;
+}
+
+.tax-benefits-card .card-header h6 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Info sections - Balanced spacing */
+.info-section {
+  margin-bottom: 1.5rem;
+}
+
+.info-section:last-child {
+  margin-bottom: 0;
+}
+
+.section-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 2px solid rgba(102, 126, 234, 0.1);
+  display: flex;
+  align-items: center;
+  color: #495057;
+}
+
+.section-title i {
+  margin-right: 0.4rem;
+  font-size: 1rem;
+}
+
+/* Info list - Tighter spacing */
+.info-list > div {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f1f3f4;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.info-list > div:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.info-list span:first-child {
+  color: #6c757d;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.info-list strong,
+.info-list .badge {
+  font-size: 0.85rem;
+}
+
+/* Benefits list - Compact gaps */
+.benefits-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.benefit-item {
+  display: flex;
+  align-items: center;
+  padding: 0.3rem 0;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #495057;
+}
+
+.benefit-item i {
+  margin-right: 0.6rem;
+  font-size: 1rem;
+}
+
+/* Benefits value section - Enhanced styling */
+.info-section:last-child .bg-light {
+  margin-top: 1rem;
+  padding: 1rem !important;
+  border-radius: 8px;
+  border: 1px solid rgba(102, 126, 234, 0.1);
+}
+
+.info-section:last-child small {
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.info-section:last-child strong {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+/* Equal height rows - Flex fix */
+.equal-height-row {
+  display: flex;
+  align-items: stretch;
+}
+
+.equal-height-row > [class*="col"] {
+  display: flex;
+}
+
+.equal-height-row .card {
+  width: 100%;
+}
+
+/* Annual stats - Better distribution */
+.annual-stats {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 100%;
+  padding: 1rem;
+}
+
+.stat-item {
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.stat-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.stat-item h6 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 0.25rem;
+}
+
+.stat-item small {
+  font-size: 0.8rem;
+  color: #6c757d;
+}
+
+.stat-item h4, .stat-item h5 {
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* Chart container - Proper centering */
+.earnings-chart-container {
+  height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+/* Enhanced metric boxes - Updated from existing */
+.metric-box {
+  padding: 1.5rem 1rem;
+  text-align: center;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.metric-box::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.metric-number {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: block;
+  line-height: 1;
+  transition: all 0.3s ease;
+}
+
+.metric-label {
+  font-size: 0.85rem;
+  color: #6c757d;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+  margin-top: 0.5rem;
+  display: block;
+}
+
+/* Responsive adjustments */
+@media (max-width: 991.98px) {
+  .equal-height-row {
+    display: block;
+  }
+  
+  .tax-benefits-card {
+    margin-top: 2rem;
+  }
+  
+  .annual-stats {
+    margin-top: 2rem;
+  }
+}
+
+
+
+
+
+
